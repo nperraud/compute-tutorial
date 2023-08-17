@@ -1,0 +1,10 @@
+{
+    "name": "Test python",
+    "image": "python:3.10",
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+        "ghcr.io/devcontainers/features/nvidia-cuda:1": {}
+    },
+    "remoteEnv": {"PATH": "/usr/local/py-utils/venvs/poetry/bin:${containerEnv:PATH}"},
+    "postCreateCommand": "poetry config virtualenvs.create false && poetry install"
+}
