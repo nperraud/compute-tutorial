@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     htop \
-    nvtop \
     vim \
     python3 \
     gcc \

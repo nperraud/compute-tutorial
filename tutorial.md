@@ -2,18 +2,18 @@
 
 ## Requirements
 
-A. BYOC: Bring your own code
+For this tutorial, you will need to:
+1. BYOC: Bring your own code
     - Your python environement should be defined using one of the following:
         * Conda: environment.yaml
         * Poetry: pyproject.toml
         * Pip: requirements.txt
-
     - Extra software that can be installed in ubuntu via `apt-get`
-B. Having docker installed on your maching
-C. Having a dockerhub account
-D. Having a runai account
-E. Having a cscs account
-F. Having at least 20Gb free on your machine 
+2. Having docker installed on your maching
+3. Having a dockerhub account
+4. Having a runai account
+5. Having a cscs account
+6. Having at least 20Gb free on your machine 
 
 
 ## Docker
@@ -40,7 +40,6 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     htop \
-    nvtop \
     vim \
     python3 \
     python-is-python3 \
@@ -53,10 +52,34 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-Now we can build the image using the following command:
+Make a folder `ubuntu-nogpu` and put this file in it. Then build the image using the following command:
 ```bash
+mkdir ubuntu-nogpu
+cd ubuntu-nogpu
+# copy the dockerfile in this folder and name it Dockerfile
 docker build -t ubuntu-nogpu .
 ```
+
+Now run the image:
+```bash
+docker run -it --rm ubuntu-nogpu bash
+```
+Play bit with this image. 
+* Note that the software we have installed is availlable. Run `htop` for example.
+* Install some new software 
+```bash
+apt-get update
+apt-get install python3-dev
+```
+* Create a new file with `vim` and save it.
+
+Now exit the container using `ctrl+D` or `exit`. 
+Restart the container and observe that the file is not there anymore. This is because is destroyed when you exit it. 
+To solve this issue, we need to mount a folder from the host to the container. This will allow us to keep the files between sessions.
+Similarly, the software you installed is also gone. Software should be installed in the dockerfile to be permanent.
+We will explore how to do this later in this tutorial.
+
+Note that containers do not have to be destroid when you exit them. Simply stoping them allow persistence like a machine that you turn off and on again. Try it... Remove the `--rm` argument in the docker run command.  However, for this tutorial, we will assume that the containers will in general be destroyed when we exit them.
 
 #### Using conda
 
