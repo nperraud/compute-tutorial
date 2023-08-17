@@ -29,10 +29,9 @@ RUN apt-get update && \
 
 # Install Python and Jupyter extensions
 RUN code-server --install-extension ms-python.python && \
-    code-server --install-extension ms-toolsai.jupyter
+    code-server --install-extension ms-toolsai.jupyter    
 
 # Copy the extensions folder
-# RUN ln -s /root/.vscode-server /root/.local/share/code-server
-RUN cp -r /root/.local/share/code-server /root/.vscode-server
-
+RUN ln -s /root/.local/share/code-server /root/.vscode-server
+# Right now, this solution require to restart the connection to VS-code server to get the plugins working
 # Install VS-code -- finish here

@@ -13,6 +13,7 @@ B. Having docker installed on your maching
 C. Having a dockerhub account
 D. Having a runai account
 E. Having a cscs account
+F. Having at least 20Gb free on your machine 
 
 
 ## Docker
@@ -50,6 +51,11 @@ RUN apt-get update && apt-get install -y \
     sed \
     && update-locale \
     && rm -rf /var/lib/apt/lists/*
+```
+
+Now we can build the image using the following command:
+```bash
+docker build -t ubuntu-nogpu .
 ```
 
 #### Using conda
@@ -140,8 +146,6 @@ docker run -it --rm -v ~/compute-tutorial:/myhome poetry-nogpu bash
 Here we are using the `conda-nogpu` image we just built. We are mounting the `~/compute-tutorial` folder to `/myhome` in the container. We are also starting a bash shell in the container. The `--rm` flag will remove the container when we exit. The `-it` flags are needed to start an interactive session.
 
 Note also that `bash` is the default command of the container. Later on, we can change it to shell scripts that launch our python code.
-
-<!-- On a mac with arm processor, you will get the WARNING: `WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested`. You could build your image without the `--platform linux/amd64` flag. However, your image will then not work on non arm platform like in cscs and runai. -->
 
 Once you are in the container, we need to create a virtual environment and install the code dependencies... This will have to be done only once as we use the folder `/myhome/.virtualenvs` to store permanently the virtual environments.
 
@@ -282,34 +286,76 @@ To add support for VS-code, we need to install the python extension in the conta
 ```dockerfile
 
 # Install VS-code -- start here
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://code-server.dev/install.sh | sh
+
+# Install Python and Jupyter extensions
+RUN code-server --install-extension ms-python.python && \
+    code-server --install-extension ms-toolsai.jupyter    
+
+# Copy the extensions folder
+RUN ln -s /root/.local/share/code-server /root/.vscode-server
+# Right now, this solution require to restart the connection to VS-code server to get the plugins working
+# Install VS-code -- finish here
+```
+
+** TODO: this is not working. **
+
+## Adding GPU support and architecture support
+
+The dockerfile for GPU is very similar to the one without GPU. The only difference is the base image. For example, for conda, you can use the following:
+```dockerfile
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+...
+```
+You might also be interested to add nvtop to monitor the GPU usage. You can do this by adding the following lines to the dockerfile:
+```dockerfile
+# Install nvtop
 RUN apt-get update && apt-get install -y \
-    curl \
+    nvtop \
     && update-locale \
     && rm -rf /var/lib/apt/lists/*
+```
 
-RUN curl -fsSL https://code-server.dev/install.sh | sh
+**Important note: when building an image for Runai or CSCS, you need to ensure that the platform is linux/amd64.
+If you are on a mac with an arm processor, you need to add the argument `--platform linux/amd64` to the `docker build` command. Furthermore, be sure that you are installing the right conda version! **
 
-RUN mkdir -p /root/.local/share/code-server/extensions \
-    && cd /root/.local/share/code-server/extensions \
-    && curl -fsSL https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-python/vsextensions/python/2021.10.1365161279/vspackage | bsdtar -xvf - extension
+You can run `linux/amd64` on an arm mac. It might be a bit slower and you will get the warning: `WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested`. 
+
+Build a new dockerfile with GPU support in a new folder `conda-gpu-ssh` and build it:
+```bash
+cd conda-gpu-ssh
+docker build -t conda-gpu-ssh --platform linux/amd64 .
+```
+It will take some time...
+
+We are all set to run our load at CSCS and Runai.
 
 
-
-
+## Renku execution?
+@Tasko, can we run these containers on renku? Let us discuss...
 
 ## Runai execution
 
-If you are on a mac, you need to add the argument `--platform linux/amd64` to the `docker build` command.
+### Intro and connection to Runai
 
-So the command becomes:
-```bash
-docker build -t --platform linux/amd64 conda-nogpu .
-```
+### File transer
+
+### Runing a docker container
+
 
 ## CSCS execution
 
+### Introduction and connection to CSCS
+Give all the tips and configuration for the easiest connection to CSCS.
+
+### File transer
+
 ### Runing using a job
+Run a load without using a docker container... Simple use of conda...
 
 ### Runing a container
-
+Run the previouly created container on CSCS.
 
