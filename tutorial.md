@@ -3,7 +3,7 @@
 ## Requirements
 
 For this tutorial, you will need to:
-1. BYOC: Bring your own code
+1. BYOC: Bring your own code (something portable that does not depend on a big amount of data or weird dependencies)
     - Your python environement should be defined using one of the following:
         * Conda: environment.yaml
         * Poetry: pyproject.toml
@@ -14,6 +14,51 @@ For this tutorial, you will need to:
 4. Having a runai account
 5. Having a cscs account
 6. Having at least 20Gb free on your machine 
+
+
+## Running simple python workloads at CSCS
+
+### Introduction and connection to CSCS
+* What is a good ssh configuration for CSCS
+* What is the best way to deal with the 2FA: https://github.com/eth-cscs/sshservice-cli
+* How to transfer files to CSCS: rsync + where should they be stored
+
+### Miniconda installation
+
+Install miniconda in your user folder using:
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+```
+
+Add the following lines to your `.bashrc` file:
+```bash
+# Set path to conda
+export PATH=$HOME/miniconda/bin:$PATH
+# Set path to conda environments folder
+export CONDA_ENVS_PATH=$HOME/.virtualenvs
+# Add . /opt/conda/etc/profile.d/conda.sh to ~/.profile
+echo "source $HOME/miniconda/etc/profile.d/conda.sh" >> ~/.profile
+```
+
+Create a new conda environment:
+```bash
+conda create -n myenv python=3.10
+```
+
+### Installing dependencies
+Which module should be loaded? I guess mostly `daint-gpu`:
+```bash
+module load daint-gpu
+```
+
+### Getting a compute node
+
+
+### Submitting a job
+
+### Batch file
 
 
 ## Docker
@@ -326,9 +371,9 @@ RUN ln -s /root/.local/share/code-server /root/.vscode-server
 
 ** TODO: this is not working. **
 
-## Adding GPU support and architecture support
+## Adding GPU support, WandB, and architecture support
 
-The dockerfile for GPU is very similar to the one without GPU. The only difference is the base image. For example, for conda, you can use the following:
+**GPU:** The dockerfile for GPU is very similar to the one without GPU. The only difference is the base image. For example, for conda, you can use the following:
 ```dockerfile
 FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
 ...
@@ -342,8 +387,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-**Important note: when building an image for Runai or CSCS, you need to ensure that the platform is linux/amd64.
-If you are on a mac with an arm processor, you need to add the argument `--platform linux/amd64` to the `docker build` command. Furthermore, be sure that you are installing the right conda version! **
+**WandB:** WandB requires to add your key to the container to authenticate. Since it is private, you do not want to add it to the dockerfile. Instead, you can add it to a file that stays in your permanent storage `/myhome`. A symbolic link is sufficient. Simply add these line to your dockerfile:
+```dockerfile
+# Make a link for wandb
+RUN ln -s /myhome/.netrc /root/.netrc
+```
+
+**Important - Architecture:** When building an image for Runai or CSCS, you need to ensure that the platform is linux/amd64.
+If you are on a mac with an arm processor, you need to add the argument `--platform linux/amd64` to the `docker build` command. Furthermore, be sure that you are installing the right conda version!
 
 You can run `linux/amd64` on an arm mac. It might be a bit slower and you will get the warning: `WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested`. 
 

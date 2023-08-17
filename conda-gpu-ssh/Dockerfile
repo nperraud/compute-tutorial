@@ -25,12 +25,12 @@ RUN apt-get update && apt-get install -y \
 
 # Install Miniconda -- start here
 # Get Miniconda
-# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-#     && bash Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda \
-#     && rm Miniconda3-latest-Linux-x86_64.sh
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh \
-    && bash Miniconda3-latest-Linux-aarch64.sh -b -p /root/miniconda \
-    && rm Miniconda3-latest-Linux-aarch64.sh
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /root/miniconda \
+    && rm Miniconda3-latest-Linux-x86_64.sh
+# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh \
+#     && bash Miniconda3-latest-Linux-aarch64.sh -b -p /root/miniconda \
+#     && rm Miniconda3-latest-Linux-aarch64.sh
 
 # Set path to conda
 ENV PATH=/root/miniconda/bin:$PATH
@@ -61,6 +61,8 @@ RUN apt-get update && apt-get install -y \
     && update-locale \
     && rm -rf /var/lib/apt/lists/*
 
+# To permanently store the WandB key
+RUN ln -s /myhome/.netrc /root/.netrc
 
 # Install SSH server -- start here
 RUN apt-get update && apt-get install -y \
