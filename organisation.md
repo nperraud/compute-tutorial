@@ -28,7 +28,8 @@ Tentative schedule
 
 ** Need to have each part independently working. **
 
-
+Lunch:
+For the lunch, we have a reservation at the Migros restaurant in the OAT at 12:00 for 40 persons. It is a self service.  Everybody pays for themselves. The visitors, i.e., the Lausanne team, can claim back their lunch afterwards.
 
 
 TODO:
@@ -36,7 +37,6 @@ TODO:
 
 * Send email for survey
 Waiting for An:
-* Lunch Mensa (An)
 * Rooms, power, desks?
-* Cancel the DS presentation the 19 October (Done)
+
 
