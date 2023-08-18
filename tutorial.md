@@ -188,7 +188,7 @@ Put this file in a folder and build the image
 ```
 
 
-## Local exectution
+## Local Docker exectution
 Let us create a directory where we will work
 
 ```bash
