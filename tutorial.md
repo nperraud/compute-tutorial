@@ -55,10 +55,14 @@ module load daint-gpu
 
 ### Getting a compute node
 
+* salloc
+* squeue, scancel
+* srun
+* srun --pty bash
 
 ### Submitting a job
 
-### Batch file
+sbatch
 
 
 ## Docker
@@ -412,6 +416,7 @@ We are all set to run our load at CSCS and Runai.
 @Tasko, can we run these containers on renku? Let us discuss...
 
 ## Runai execution
+@Albert, here you can shine
 
 ### Intro and connection to Runai
 
