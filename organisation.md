@@ -16,9 +16,9 @@
 - 12:00. Lunch
 - 13:00. Docker presentation
 - 13:30. Practical session for Docker
-- 14:00. Renku execution
-- 14:40. Coffee break
-- 15:00. Practical session CSCS part 2: runing container with CSCS + end of the morning task
+- 14:10. Renku execution
+- 14:30. Coffee break
+- 14:45. Practical session CSCS part 2: runing container with CSCS + end of the morning task
 - 16:00. End of the day
 - 16:14. Train to Lausanne, platform 3
 
@@ -45,6 +45,10 @@ Die Preise Der Menüs sind zwischen CHF 13.00 und 14.50 inkl.Suppe, die Getränk
     - Install docker
 
     - 50GB of free space
+    - if you have not been invited to sd00, contact the helpdesk and ask them
+    
+    - add victor.vanwymeersch@sdsc.ethz.ch to the email
+
 
 
 Check with An:
